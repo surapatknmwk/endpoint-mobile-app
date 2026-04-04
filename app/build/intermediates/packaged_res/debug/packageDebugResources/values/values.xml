@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="btnDangerBg">#D32F2F</color>
+    <color name="btnDangerText">#FFFFFF</color>
+    <color name="btnOutlineBorder">#1976D2</color>
+    <color name="btnOutlineDangerBorder">#D32F2F</color>
+    <color name="btnOutlineDangerText">#D32F2F</color>
+    <color name="btnOutlineSecondaryBorder">#424242</color>
+    <color name="btnOutlineSecondaryText">#424242</color>
+    <color name="btnOutlineText">#1976D2</color>
+    <color name="btnPrimaryBg">#1976D2</color>
+    <color name="btnPrimaryText">#FFFFFF</color>
+    <color name="btnSecondaryBg">#424242</color>
+    <color name="btnSecondaryText">#FFFFFF</color>
+    <color name="btnSuccessBg">#388E3C</color>
+    <color name="btnSuccessText">#FFFFFF</color>
+    <color name="btnWarningBg">#F57C00</color>
+    <color name="btnWarningText">#FFFFFF</color>
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="colorSecondary">#424242</color>
+    <string name="app_name">Endpoint</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Create Account</string>
+    <string name="btn_sign_out">Sign Out</string>
+    <string name="hint_display_name">Display Name</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="prompt_no_account">Don\'t have an account? Sign Up</string>
+    <string name="title_search">ค้นหาข้อมูล</string>
+    <string name="welcome_message">สวัสดี, %1$s</string>
+    <style name="App.Button" parent="Widget.Material3.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+    <style name="App.Button.Danger" parent="App.Button">
+        <item name="backgroundTint">@color/btnDangerBg</item>
+        <item name="android:textColor">@color/btnDangerText</item>
+    </style>
+    <style name="App.Button.Outline" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+    <style name="App.Button.Outline.Danger" parent="App.Button.Outline">
+        <item name="strokeColor">@color/btnOutlineDangerBorder</item>
+        <item name="android:textColor">@color/btnOutlineDangerText</item>
+    </style>
+    <style name="App.Button.Outline.Primary" parent="App.Button.Outline">
+        <item name="strokeColor">@color/btnOutlineBorder</item>
+        <item name="android:textColor">@color/btnOutlineText</item>
+    </style>
+    <style name="App.Button.Outline.Primary.FullWidth" parent="App.Button.Outline.Primary">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    <style name="App.Button.Outline.Secondary" parent="App.Button.Outline">
+        <item name="strokeColor">@color/btnOutlineSecondaryBorder</item>
+        <item name="android:textColor">@color/btnOutlineSecondaryText</item>
+    </style>
+    <style name="App.Button.Primary" parent="App.Button">
+        <item name="backgroundTint">@color/btnPrimaryBg</item>
+        <item name="android:textColor">@color/btnPrimaryText</item>
+    </style>
+    <style name="App.Button.Primary.FullWidth" parent="App.Button.Primary">
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    <style name="App.Button.Secondary" parent="App.Button">
+        <item name="backgroundTint">@color/btnSecondaryBg</item>
+        <item name="android:textColor">@color/btnSecondaryText</item>
+    </style>
+    <style name="App.Button.Success" parent="App.Button">
+        <item name="backgroundTint">@color/btnSuccessBg</item>
+        <item name="android:textColor">@color/btnSuccessText</item>
+    </style>
+    <style name="App.Button.Warning" parent="App.Button">
+        <item name="backgroundTint">@color/btnWarningBg</item>
+        <item name="android:textColor">@color/btnWarningText</item>
+    </style>
+    <style name="Theme.EndpointMobile" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:colorBackground">#FFFFFF</item>
+        <item name="android:windowBackground">#FFFFFF</item>
+    </style>
+</resources>

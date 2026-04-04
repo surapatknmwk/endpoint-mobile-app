@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Brand Colors -->
+    <color name="colorPrimary">#1976D2</color>
+    <color name="colorPrimaryDark">#1565C0</color>
+    <color name="colorSecondary">#424242</color>
+
+    <!-- Button Colors -->
+    <color name="btnPrimaryBg">#1976D2</color>
+    <color name="btnPrimaryText">#FFFFFF</color>
+
+    <color name="btnSecondaryBg">#424242</color>
+    <color name="btnSecondaryText">#FFFFFF</color>
+
+    <color name="btnDangerBg">#D32F2F</color>
+    <color name="btnDangerText">#FFFFFF</color>
+
+    <color name="btnSuccessBg">#388E3C</color>
+    <color name="btnSuccessText">#FFFFFF</color>
+
+    <color name="btnWarningBg">#F57C00</color>
+    <color name="btnWarningText">#FFFFFF</color>
+
+    <color name="btnOutlineBorder">#1976D2</color>
+    <color name="btnOutlineText">#1976D2</color>
+
+    <color name="btnOutlineDangerBorder">#D32F2F</color>
+    <color name="btnOutlineDangerText">#D32F2F</color>
+
+    <color name="btnOutlineSecondaryBorder">#424242</color>
+    <color name="btnOutlineSecondaryText">#424242</color>
+
+</resources>
