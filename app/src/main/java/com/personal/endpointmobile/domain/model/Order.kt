@@ -9,5 +9,7 @@ data class Order(
     val district: String,
     val subDistrict: String,
     val detail: String,
+    val status: String = "ใหม่",
+    val receivedAt: Long = 0L,
     val createdAt: Long = System.currentTimeMillis()
 )

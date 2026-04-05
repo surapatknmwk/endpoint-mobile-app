@@ -27,10 +27,22 @@ public final class FragmentOrderResultBinding implements ViewBinding {
   public final ComponentBottomNavBinding bottomNav;
 
   @NonNull
-  public final MaterialButton btnAddOrder;
+  public final MaterialButton btnDeleteOrder;
 
   @NonNull
   public final MaterialButton btnFilter;
+
+  @NonNull
+  public final MaterialButton btnNewOrder;
+
+  @NonNull
+  public final MaterialButton btnSubmit;
+
+  @NonNull
+  public final MaterialButton btnSyncSheet;
+
+  @NonNull
+  public final LinearLayout layoutActionRow;
 
   @NonNull
   public final LinearLayout layoutTitleRow;
@@ -54,15 +66,21 @@ public final class FragmentOrderResultBinding implements ViewBinding {
   public final View viewSpinnerOverlay;
 
   private FragmentOrderResultBinding(@NonNull ConstraintLayout rootView,
-      @NonNull ComponentBottomNavBinding bottomNav, @NonNull MaterialButton btnAddOrder,
-      @NonNull MaterialButton btnFilter, @NonNull LinearLayout layoutTitleRow,
+      @NonNull ComponentBottomNavBinding bottomNav, @NonNull MaterialButton btnDeleteOrder,
+      @NonNull MaterialButton btnFilter, @NonNull MaterialButton btnNewOrder,
+      @NonNull MaterialButton btnSubmit, @NonNull MaterialButton btnSyncSheet,
+      @NonNull LinearLayout layoutActionRow, @NonNull LinearLayout layoutTitleRow,
       @NonNull ProgressBar progressBar, @NonNull RecyclerView rvOrders,
       @NonNull ComponentTopBarBinding topBar, @NonNull TextView tvEmpty,
       @NonNull TextView tvOrderListTitle, @NonNull View viewSpinnerOverlay) {
     this.rootView = rootView;
     this.bottomNav = bottomNav;
-    this.btnAddOrder = btnAddOrder;
+    this.btnDeleteOrder = btnDeleteOrder;
     this.btnFilter = btnFilter;
+    this.btnNewOrder = btnNewOrder;
+    this.btnSubmit = btnSubmit;
+    this.btnSyncSheet = btnSyncSheet;
+    this.layoutActionRow = layoutActionRow;
     this.layoutTitleRow = layoutTitleRow;
     this.progressBar = progressBar;
     this.rvOrders = rvOrders;
@@ -106,15 +124,39 @@ public final class FragmentOrderResultBinding implements ViewBinding {
       }
       ComponentBottomNavBinding binding_bottomNav = ComponentBottomNavBinding.bind(bottomNav);
 
-      id = R.id.btnAddOrder;
-      MaterialButton btnAddOrder = ViewBindings.findChildViewById(rootView, id);
-      if (btnAddOrder == null) {
+      id = R.id.btnDeleteOrder;
+      MaterialButton btnDeleteOrder = ViewBindings.findChildViewById(rootView, id);
+      if (btnDeleteOrder == null) {
         break missingId;
       }
 
       id = R.id.btnFilter;
       MaterialButton btnFilter = ViewBindings.findChildViewById(rootView, id);
       if (btnFilter == null) {
+        break missingId;
+      }
+
+      id = R.id.btnNewOrder;
+      MaterialButton btnNewOrder = ViewBindings.findChildViewById(rootView, id);
+      if (btnNewOrder == null) {
+        break missingId;
+      }
+
+      id = R.id.btnSubmit;
+      MaterialButton btnSubmit = ViewBindings.findChildViewById(rootView, id);
+      if (btnSubmit == null) {
+        break missingId;
+      }
+
+      id = R.id.btnSyncSheet;
+      MaterialButton btnSyncSheet = ViewBindings.findChildViewById(rootView, id);
+      if (btnSyncSheet == null) {
+        break missingId;
+      }
+
+      id = R.id.layoutActionRow;
+      LinearLayout layoutActionRow = ViewBindings.findChildViewById(rootView, id);
+      if (layoutActionRow == null) {
         break missingId;
       }
 
@@ -162,8 +204,9 @@ public final class FragmentOrderResultBinding implements ViewBinding {
       }
 
       return new FragmentOrderResultBinding((ConstraintLayout) rootView, binding_bottomNav,
-          btnAddOrder, btnFilter, layoutTitleRow, progressBar, rvOrders, binding_topBar, tvEmpty,
-          tvOrderListTitle, viewSpinnerOverlay);
+          btnDeleteOrder, btnFilter, btnNewOrder, btnSubmit, btnSyncSheet, layoutActionRow,
+          layoutTitleRow, progressBar, rvOrders, binding_topBar, tvEmpty, tvOrderListTitle,
+          viewSpinnerOverlay);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

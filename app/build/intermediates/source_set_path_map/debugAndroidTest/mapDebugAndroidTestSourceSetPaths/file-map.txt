@@ -1,0 +1,6 @@
+com.personal.endpointmobile.test.app-jetified-annotation-experimental-1.4.0-0 C:\Users\Surapat_k\.gradle\caches\transforms-4\1cd3eccd5221c8fcd2f2e1e12db21883\transformed\jetified-annotation-experimental-1.4.0\res
+com.personal.endpointmobile.test.app-jetified-core-1.5.0-1 C:\Users\Surapat_k\.gradle\caches\transforms-4\1d2dfbb2631f1ac0613037aa470acbcb\transformed\jetified-core-1.5.0\res
+com.personal.endpointmobile.test.app-androidTest-2 C:\Users\Surapat_k\Application\Project\endpoint-mobile-app\app\build\generated\res\resValues\androidTest\debug
+com.personal.endpointmobile.test.app-mergeDebugAndroidTestResources-3 C:\Users\Surapat_k\Application\Project\endpoint-mobile-app\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.personal.endpointmobile.test.app-mergeDebugAndroidTestResources-4 C:\Users\Surapat_k\Application\Project\endpoint-mobile-app\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.personal.endpointmobile.test.app-debugAndroidTest-5 C:\Users\Surapat_k\Application\Project\endpoint-mobile-app\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources

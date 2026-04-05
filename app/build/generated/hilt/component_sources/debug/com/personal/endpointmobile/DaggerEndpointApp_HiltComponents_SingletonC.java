@@ -22,8 +22,6 @@ import com.personal.endpointmobile.presentation.ui.home.OrderResultFragment;
 import com.personal.endpointmobile.presentation.ui.home.OrderResultFragment_MembersInjector;
 import com.personal.endpointmobile.presentation.ui.home.OrdersFragment;
 import com.personal.endpointmobile.presentation.ui.home.OrdersFragment_MembersInjector;
-import com.personal.endpointmobile.presentation.ui.home.SearchFragment;
-import com.personal.endpointmobile.presentation.ui.home.SearchResultFragment;
 import com.personal.endpointmobile.presentation.viewmodel.AuthViewModel;
 import com.personal.endpointmobile.presentation.viewmodel.AuthViewModel_HiltModules;
 import dagger.hilt.android.ActivityRetainedLifecycle;
@@ -348,14 +346,6 @@ public final class DaggerEndpointApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectSearchFragment(SearchFragment arg0) {
-    }
-
-    @Override
-    public void injectSearchResultFragment(SearchResultFragment arg0) {
-    }
-
-    @Override
     public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
       return activityCImpl.getHiltInternalFactoryFactory();
     }
@@ -631,7 +621,7 @@ public final class DaggerEndpointApp_HiltComponents_SingletonC {
     }
 
     @Override
-    public void injectEndpointApp(EndpointApp endpointApp) {
+    public void injectEndpointApp(EndpointApp arg0) {
     }
 
     @Override

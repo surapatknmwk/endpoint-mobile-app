@@ -20,16 +20,16 @@ public final class ComponentBottomNavBinding implements ViewBinding {
   private final LinearLayout rootView;
 
   @NonNull
-  public final MaterialButton btnOrders;
+  public final MaterialButton btnMenu;
 
   @NonNull
-  public final MaterialButton btnSearch;
+  public final MaterialButton btnOrders;
 
-  private ComponentBottomNavBinding(@NonNull LinearLayout rootView,
-      @NonNull MaterialButton btnOrders, @NonNull MaterialButton btnSearch) {
+  private ComponentBottomNavBinding(@NonNull LinearLayout rootView, @NonNull MaterialButton btnMenu,
+      @NonNull MaterialButton btnOrders) {
     this.rootView = rootView;
+    this.btnMenu = btnMenu;
     this.btnOrders = btnOrders;
-    this.btnSearch = btnSearch;
   }
 
   @Override
@@ -59,19 +59,19 @@ public final class ComponentBottomNavBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.btnMenu;
+      MaterialButton btnMenu = ViewBindings.findChildViewById(rootView, id);
+      if (btnMenu == null) {
+        break missingId;
+      }
+
       id = R.id.btnOrders;
       MaterialButton btnOrders = ViewBindings.findChildViewById(rootView, id);
       if (btnOrders == null) {
         break missingId;
       }
 
-      id = R.id.btnSearch;
-      MaterialButton btnSearch = ViewBindings.findChildViewById(rootView, id);
-      if (btnSearch == null) {
-        break missingId;
-      }
-
-      return new ComponentBottomNavBinding((LinearLayout) rootView, btnOrders, btnSearch);
+      return new ComponentBottomNavBinding((LinearLayout) rootView, btnMenu, btnOrders);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

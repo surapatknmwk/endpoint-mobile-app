@@ -24,6 +24,9 @@ public final class ItemOrderBinding implements ViewBinding {
   public final MaterialButton btnDeleteItem;
 
   @NonNull
+  public final MaterialButton btnSubmitItem;
+
+  @NonNull
   public final TextView tvAddress;
 
   @NonNull
@@ -38,17 +41,22 @@ public final class ItemOrderBinding implements ViewBinding {
   @NonNull
   public final TextView tvPlatform;
 
+  @NonNull
+  public final TextView tvStatusDone;
+
   private ItemOrderBinding(@NonNull MaterialCardView rootView,
-      @NonNull MaterialButton btnDeleteItem, @NonNull TextView tvAddress,
-      @NonNull TextView tvDetail, @NonNull TextView tvName, @NonNull TextView tvPhone,
-      @NonNull TextView tvPlatform) {
+      @NonNull MaterialButton btnDeleteItem, @NonNull MaterialButton btnSubmitItem,
+      @NonNull TextView tvAddress, @NonNull TextView tvDetail, @NonNull TextView tvName,
+      @NonNull TextView tvPhone, @NonNull TextView tvPlatform, @NonNull TextView tvStatusDone) {
     this.rootView = rootView;
     this.btnDeleteItem = btnDeleteItem;
+    this.btnSubmitItem = btnSubmitItem;
     this.tvAddress = tvAddress;
     this.tvDetail = tvDetail;
     this.tvName = tvName;
     this.tvPhone = tvPhone;
     this.tvPlatform = tvPlatform;
+    this.tvStatusDone = tvStatusDone;
   }
 
   @Override
@@ -84,6 +92,12 @@ public final class ItemOrderBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.btnSubmitItem;
+      MaterialButton btnSubmitItem = ViewBindings.findChildViewById(rootView, id);
+      if (btnSubmitItem == null) {
+        break missingId;
+      }
+
       id = R.id.tvAddress;
       TextView tvAddress = ViewBindings.findChildViewById(rootView, id);
       if (tvAddress == null) {
@@ -114,8 +128,14 @@ public final class ItemOrderBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ItemOrderBinding((MaterialCardView) rootView, btnDeleteItem, tvAddress, tvDetail,
-          tvName, tvPhone, tvPlatform);
+      id = R.id.tvStatusDone;
+      TextView tvStatusDone = ViewBindings.findChildViewById(rootView, id);
+      if (tvStatusDone == null) {
+        break missingId;
+      }
+
+      return new ItemOrderBinding((MaterialCardView) rootView, btnDeleteItem, btnSubmitItem,
+          tvAddress, tvDetail, tvName, tvPhone, tvPlatform, tvStatusDone);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

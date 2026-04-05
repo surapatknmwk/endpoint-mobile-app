@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputLayout
 import com.personal.endpointmobile.core.data.LocationMasterData
 import com.personal.endpointmobile.core.data.PlatformMasterData
+import com.personal.endpointmobile.core.data.StatusMasterData
 import com.personal.endpointmobile.domain.model.Province
 
 /**
@@ -99,6 +100,17 @@ fun Fragment.setupPlatformDropdown(tilPlatform: TextInputLayout) {
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
             PlatformMasterData.platforms,
+        )
+    )
+}
+
+fun Fragment.setupStatusDropdown(tilStatus: TextInputLayout) {
+    val actv = tilStatus.editText as AutoCompleteTextView
+    actv.setAdapter(
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            StatusMasterData.statuses,
         )
     )
 }

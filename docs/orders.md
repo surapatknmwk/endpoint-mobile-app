@@ -5,22 +5,26 @@
 ### ไฟล์ที่เกี่ยวข้อง
 | ไฟล์ | หน้าที่ |
 |---|---|
-| `res/layout/fragment_orders.xml` | UI layout ของ form เพิ่ม order |
+| `res/layout/fragment_orders.xml` | UI layout ของ form เพิ่ม order (เข้าได้จาก Bottom Nav → ORDERS) |
 | `presentation/ui/home/OrdersFragment.kt` | Logic หลัก: validation, spinner, reset, insert |
-| `core/utils/LocationDropdownHelper.kt` | Helper setup dropdown จังหวัด/อำเภอ/ตำบล และ platform |
+| `core/utils/LocationDropdownHelper.kt` | Helper setup dropdown จังหวัด/อำเภอ/ตำบล, platform และ status |
 | `core/utils/Extensions.kt` | Extension functions: `visible()` / `gone()` สำหรับซ่อน/แสดง view |
 | `core/utils/AppDialog.kt` | Custom alert dialog component |
-| `domain/repository/OrderRepository.kt` | Interface: `insert`, `getAll`, `deleteById` |
+| `core/utils/OrderFilterStore.kt` | SharedPreferences store สำหรับบันทึก filter draft |
+| `domain/model/Order.kt` | data class ของ Order |
+| `domain/model/OrderFilter.kt` | data class สำหรับเงื่อนไขกรอง |
+| `domain/repository/OrderRepository.kt` | Interface: `insert`, `getAll`, `filter`, `deleteById`, `updateById` |
 | `data/repository/OrderRepositoryImpl.kt` | SQLite implementation ของ OrderRepository |
-| `data/local/db/AppDatabase.kt` | SQLiteOpenHelper, สร้างตาราง |
-| `data/local/dao/OrderDao.kt` | SQL query: `insert`, `getAll`, `deleteById` |
+| `data/local/db/AppDatabase.kt` | SQLiteOpenHelper, สร้างตาราง, migration |
+| `data/local/dao/OrderDao.kt` | SQL query: `insert`, `getAll`, `filter`, `deleteById`, `updateById` |
 | `core/di/DatabaseModule.kt` | Hilt provide `AppDatabase` |
+| `core/data/StatusMasterData.kt` | รายการ status: ใหม่, ส่งงานแล้ว, ว่าง |
 
 ---
 
 ### การทำงานของ Button
 
-**ปุ่มเพิ่ม (btnAddOrder)**
+**ปุ่มเพิ่ม (btnAddOrder) — ใน OrdersFragment**
 1. เรียก `validateForm()` ก่อนเสมอ
 2. ถ้าผ่าน → แสดง `progressBar` (spinner) → `lifecycleScope.launch { saveOrder() }`
 3. ถ้าไม่ผ่าน → แสดง error ใต้ field ที่ไม่ครบ ไม่ทำอะไรต่อ
@@ -51,7 +55,7 @@
 binding.progressBar.visible()  // แสดง spinner
 binding.progressBar.gone()     // ซ่อน spinner
 ```
-> pattern เดียวกับที่ใช้ใน `LoginFragment` และ `RegisterFragment`
+> pattern เดียวกับที่ใช้ใน `LoginFragment`, `RegisterFragment`, `OrderResultFragment`
 
 #### Spinner Overlay (บล็อก touch พื้นหลัง)
 - เมื่อ spinner แสดง จะมี `viewSpinnerOverlay` (semi-transparent layer) คลุมทั้งหน้าจอ
@@ -63,9 +67,9 @@ binding.progressBar.gone()     // ซ่อน spinner
 - ถ้า spinner แสดงนานกว่า **3 นาที** → แสดง `Toast`: `"Error: session timeout"` แล้วเรียก `hideSpinner()`
 - เมื่อ operation เสร็จก่อน timeout → เรียก `hideSpinner()` เพื่อยกเลิก timeout
 
-#### ปิด Spinner ต้อง Delay 2 วินาทีเสมอ
-- `hideSpinner()` จะไม่ซ่อนทันที แต่ delay **2 วินาที** ก่อนซ่อน spinner + overlay
-- ช่วง delay 2 วินาที → overlay ยังคลุมอยู่ ผู้ใช้ยังกด action พื้นหลังไม่ได้
+#### ปิด Spinner มี Delay 700ms
+- `hideSpinner()` delay **700ms** ก่อนซ่อน spinner + overlay
+- ช่วง delay → overlay ยังคลุมอยู่ ผู้ใช้ยังกด action พื้นหลังไม่ได้
 - ต้อง cancel timeout ใน `onDestroyView()` เสมอ เพื่อป้องกัน memory leak
 
 ```kotlin
@@ -83,7 +87,7 @@ private fun hideSpinner() {
             binding.progressBar.gone()
             binding.viewSpinnerOverlay.gone()
         }
-    }, 2000L)
+    }, 700L)
 }
 ```
 
@@ -94,8 +98,7 @@ private fun hideSpinner() {
 - เมื่อเลือกจังหวัด → อำเภอจะ update อัตโนมัติ
 - เมื่อเลือกอำเภอ → ตำบลจะ update อัตโนมัติ
 - ตอน `resetFields()` ต้อง clear ทั้ง 3 field เสมอ
-
----
+- อ่านค่าจาก dropdown ต้องใช้ `(binding.tilXxx.editText as AutoCompleteTextView).text.toString().trim()` เสมอ — ห้ามอ่านจาก `binding.actvXxx.text` โดยตรง เพราะอาจได้ค่าไม่ตรงใน DialogFragment
 
 ---
 
@@ -106,13 +109,21 @@ private fun hideSpinner() {
 |---|---|
 | `res/layout/fragment_order_result.xml` | UI แสดงรายการ order |
 | `res/layout/item_order.xml` | layout แต่ละ item ใน RecyclerView |
+| `res/layout/dialog_add_order.xml` | layout Top-sheet Dialog เพิ่ม order |
 | `res/layout/dialog_edit_order.xml` | layout BottomSheet แก้ไข order |
-| `presentation/ui/home/OrderResultFragment.kt` | โหลด orders จาก SQLite มาแสดง, จัดการ edit/delete |
-| `presentation/ui/home/OrderResultAdapter.kt` | RecyclerView Adapter |
+| `res/layout/dialog_filter_order.xml` | layout Center Dialog กรอง order |
+| `res/anim/slide_in_from_top.xml` | animation AddOrderDialog เข้า (slide ลงจากบน 300ms) |
+| `res/anim/slide_out_to_top.xml` | animation AddOrderDialog ออก (slide ขึ้นบน 250ms) |
+| `res/drawable/bg_top_sheet.xml` | shape สีขาว มุมล่างโค้ง 16dp สำหรับ AddOrderDialog |
+| `res/drawable/bg_dialog_center.xml` | shape สีขาว มุมโค้ง 16dp ทุกด้าน สำหรับ FilterOrderDialog |
+| `presentation/ui/home/OrderResultFragment.kt` | โหลด orders จาก SQLite มาแสดง, จัดการ add/edit/delete/filter/submit |
+| `presentation/ui/home/OrderResultAdapter.kt` | RecyclerView Adapter — รองรับ mode DELETE และ SUBMIT |
+| `presentation/ui/home/AddOrderDialog.kt` | DialogFragment (Top-sheet) สำหรับเพิ่ม order ใหม่ |
 | `presentation/ui/home/EditOrderDialog.kt` | BottomSheetDialogFragment สำหรับแก้ไข order |
+| `presentation/ui/home/FilterOrderDialog.kt` | DialogFragment (Center) สำหรับกรอง order |
 | `domain/model/Order.kt` | data class ของ Order |
-| `domain/repository/OrderRepository.kt` | interface: `getAll()`, `updateById()` |
-| `data/local/dao/OrderDao.kt` | query `SELECT * FROM orders ORDER BY id DESC`, `UPDATE` |
+| `domain/repository/OrderRepository.kt` | interface: `getAll()`, `filter()`, `updateById()`, `insert()`, `deleteById()` |
+| `data/local/dao/OrderDao.kt` | query SELECT, UPDATE, INSERT, DELETE + dynamic filter WHERE |
 
 #### Order Model
 ```kotlin
@@ -125,14 +136,17 @@ data class Order(
     val district: String,
     val subDistrict: String,
     val detail: String,
+    val status: String,     // default "ใหม่" — ระบบกำหนดเอง ผู้ใช้แก้ไขไม่ได้
+    val receivedAt: Long,   // System.currentTimeMillis() ตอน insert — ผู้ใช้แก้ไขไม่ได้
     val createdAt: Long
 )
 ```
 
 #### SQLite Database
-- ใช้ `AppDatabase` (SQLiteOpenHelper) ชื่อไฟล์ `endpoint.db`
+- ใช้ `AppDatabase` (SQLiteOpenHelper) ชื่อไฟล์ `endpoint.db` version **2**
+- migration v1→v2: `ALTER TABLE orders ADD COLUMN status`, `ADD COLUMN received_at`
 - inject ผ่าน Hilt (`DatabaseModule` → `RepositoryModule`)
-- `OrderResultFragment` inject `OrderRepository` แล้วเรียก `getAll()` ใน `lifecycleScope.launch`
+- `OrderResultFragment` inject `OrderRepository` แล้วเรียก `getAll()` หรือ `filter()` ใน `lifecycleScope.launch`
 - ดึงข้อมูลบน `Dispatchers.IO` ผ่าน `withContext` ใน `OrderRepositoryImpl`
 - เรียงลำดับ `ORDER BY id DESC` (order ใหม่อยู่บนสุด)
 
@@ -147,69 +161,107 @@ data class Order(
 | `district` | TEXT | nullable |
 | `sub_district` | TEXT | nullable |
 | `detail` | TEXT | nullable |
+| `status` | TEXT NOT NULL | default `'ใหม่'` — เพิ่มใน migration v2 |
+| `received_at` | INTEGER NOT NULL | default `0` — เพิ่มใน migration v2, set เป็น `System.currentTimeMillis()` ตอน insert |
 | `created_at` | INTEGER NOT NULL | timestamp |
 
-#### Flow เมื่อกดปุ่มเพิ่ม
+#### Layout ของ fragment_order_result.xml
 ```
-validateForm() → pass
-    → showSpinnerWithTimeout()
-    → lifecycleScope.launch {
-          saveOrder()                ← suspend: build Order → orderRepository.insert() → SQLite (IO thread)
-          hideSpinner() (delay 2 วิ)
-      }
-    → AppDialog (SUCCESS) "เพิ่ม Order สำเร็จ"
-    → กด ตกลง → resetFields() → navigate to OrderResultFragment
+[ ORDERS (title)                              ]
+[ Order (btnNewOrder)                         ]
+[ ลบ Order (btnDeleteOrder) | ส่งงาน (btnSubmit) ]
+[ รายการ Orders      [ กรอง (btnFilter) ]    ]
+[ RecyclerView (rvOrders) / tvEmpty           ]
+[ Bottom Nav                                  ]
+```
+
+| View ID | ประเภท | หมายเหตุ |
+|---|---|---|
+| `btnNewOrder` | Secondary | เปิด AddOrderDialog (top-sheet) |
+| `btnDeleteOrder` | Outline Danger | สลับ card mode → DELETE — icon สีแดง |
+| `btnSubmit` | Success | สลับ card mode → SUBMIT |
+| `btnFilter` | Outline Secondary | เปิด FilterOrderDialog (center popup) + spinner |
+
+#### Card Mode (OrderResultAdapter.Mode)
+- **DELETE mode** (default) — ปุ่มใน card แสดงปุ่ม **ลบ**
+- **SUBMIT mode** — ปุ่มใน card แสดงปุ่ม **ส่งงาน**
+- order ที่ `status == "ส่งงานแล้ว"` — แสดง text "ส่งงานแล้ว" สีเขียว แทนปุ่ม, กด card ไม่ได้ (ล็อค)
+
+#### Navigation
+```
+login/register  ──→  orderResultFragment   (home หลัง login, label = "ORDERS")
+                         ↓ bottomNav.btnOrders   ← อยู่กับที่ (no-op)
+                         ↓ bottomNav.btnOrders (จาก ordersFragment)
+                     orderResultFragment
+                         ↓ btnNewOrder           ← เปิด AddOrderDialog (top-sheet) ไม่ navigate
+                     [AddOrderDialog]
+```
+
+> หน้า searchFragment และ searchResultFragment ถูกลบออกแล้ว — ปุ่ม SEARCH เปลี่ยนเป็น MENU (ยังไม่ implement)
+
+#### Flow กดปุ่ม btnFilter (กรอง)
+```
+กด btnFilter
+    → FilterOrderDialog.newInstance(initialFilter, onApply, onReset, onDraft).show()
+         → Center dialog แสดงกลางจอ
+         → pre-fill ค่าจาก activeFilter (ถ้ามี)
+         → กรอกเงื่อนไข: ชื่อ, platform, จังหวัด, อำเภอ, ตำบล, สถานะ, วันที่รับ Order
+    → กด กรอง
+         → onApply(filter) → showSpinnerWithTimeout() → loadOrders() → hideSpinner()
+         → บันทึก filter ลง OrderFilterStore (SharedPreferences)
+    → กด รีเซต
+         → onReset() → activeFilter = OrderFilter(status = "ใหม่") → spinner → loadOrders()
+    → กด background / back
+         → onCancel() → ไม่บันทึก draft (ค่าใน store ไม่เปลี่ยน)
+    → ปิด dialog โดยไม่กดปุ่ม
+         → onDraft(draft) → บันทึก draft ลง store (เปิดครั้งหน้าค่ายังอยู่)
+```
+
+#### Filter Default
+- เปิดหน้าครั้งแรก (store ว่าง) → `activeFilter = OrderFilter(status = "ใหม่")`
+- เปิดหน้าอีกครั้ง (มี draft ใน store) → ใช้ค่าที่บันทึกไว้
+- กด Reset → `activeFilter = OrderFilter(status = "ใหม่")`
+
+#### Flow กดปุ่ม ส่งงาน (btnSubmit บน)
+```
+กด btnSubmit
+    → cardMode = SUBMIT → loadOrders() (reload adapter ด้วย mode ใหม่)
+    → ปุ่มใน card เปลี่ยนเป็น "ส่งงาน" (ยกเว้น order ที่ status = "ส่งงานแล้ว")
+กด ส่งงาน ใน card
+    → AppDialog WARNING "ต้องการส่งงานรายการ {ชื่อ} ใช่ไหม?"
+    → กด ยืนยัน → orderRepository.updateById(order.copy(status = "ส่งงานแล้ว")) → loadOrders()
+กด btnDeleteOrder (ลบ Order บน)
+    → cardMode = DELETE → loadOrders() (ปุ่มใน card กลับเป็น "ลบ")
 ```
 
 #### Flow โหลด Order Result
 ```
 OrderResultFragment.onViewCreated()
-    → loadOrders()
-         → lifecycleScope.launch {
-               orderRepository.getAll()    ← suspend (IO thread, SQLite read)
-               if empty → tvEmpty
-               else     → RecyclerView + OrderResultAdapter(onCardClick, onDeleteClick)
-           }
+    → loadOrders()   ← suspend fun เรียกผ่าน lifecycleScope.launch
+         → orderRepository.getAll() หรือ filter(activeFilter)
+         → if empty → tvEmpty
+         → else     → RecyclerView + OrderResultAdapter(mode, onCardClick, onDeleteClick, onSubmitClick)
 ```
 
-#### Flow กดที่ card เพื่อแก้ไข
-```
-กด card
-    → EditOrderDialog.newInstance(order) { updated → ... }
-         → BottomSheetDialog แสดงทุก field พร้อม pre-fill ข้อมูลเดิม
-         → cascade dropdown จังหวัด/อำเภอ/ตำบล pre-fill จาก LocationMasterData
-    → กด ยืนยัน
-         → validate (ชื่อ + Platform required)
-         → onConfirm(updated)
-              → orderRepository.updateById(updated)    ← suspend (IO thread, SQLite UPDATE)
-              → loadOrders()    ← reload list
-    → กด ยกเลิก → dismiss dialog ไม่ทำอะไร
-```
+#### AddOrderDialog
+- `DialogFragment` สร้างผ่าน `AddOrderDialog.newInstance { order -> ... }`
+- style: `TopSheetDialogStyle` — slide ลงจากบน
+- `status` = `"ใหม่"` เสมอ (hardcode, ไม่แสดง field)
+- `receivedAt` = `System.currentTimeMillis()` ตอนกด เพิ่ม (ไม่แสดง field)
+- validate: ชื่อและ Platform required
 
-#### Layout ของ fragment_order_result.xml
-```
-[ เพิ่ม Order (btnAddOrder)              ]
-[ รายการ Orders      [ กรอง (btnFilter)] ]
-[ RecyclerView (rvOrders) / tvEmpty      ]
-[ Bottom Nav                             ]
-```
+#### EditOrderDialog
+- `BottomSheetDialogFragment` สร้างผ่าน `EditOrderDialog.newInstance(order) { updated -> ... }`
+- pre-fill ทุก field จาก `order` ที่รับมา
+- **ไม่แสดง** field status และ receivedAt — `order.copy(...)` คงค่าเดิมทั้งสองไว้เสมอ
+- order ที่ `status == "ส่งงานแล้ว"` — กด card ไม่ได้ (ล็อคที่ Adapter)
+- validate: ชื่อและ Platform required
 
-| View ID | ประเภท | หมายเหตุ |
-|---|---|---|
-| `btnAddOrder` | Secondary | navigate to ordersFragment |
-| `btnFilter` | Outline Secondary | ขนาดเล็ก, อยู่ขวาของ title (ยังไม่ implement) |
-
-#### Navigation
-```
-login/register  ──→  orderResultFragment   (home หลัง login)
-ordersFragment  ──→  orderResultFragment
-                         ↓ btnBack
-                     (navigateUp)
-                         ↓ btnSearch
-                     searchFragment
-                         ↓ btnAddOrder / btnOrders
-                     ordersFragment
-```
+#### FilterOrderDialog
+- `DialogFragment` สร้างผ่าน `FilterOrderDialog.newInstance(initialFilter, onApply, onReset, onDraft)`
+- style: `CenterDialogStyle` — แสดงกลางจอ, กด background ปิดได้ (setCanceledOnTouchOutside = true)
+- กด background → `onCancel()` → `actionHandled = true` → ไม่บันทึก draft
+- fields: ชื่อ, platform, จังหวัด/อำเภอ/ตำบล (cascade), สถานะ (dropdown), วันที่รับ Order (DatePicker + clear icon)
 
 #### item_order.xml แสดงผล
 ```
@@ -217,30 +269,16 @@ ordersFragment  ──→  orderResultFragment
 │ ชื่อ (bold)              Platform (เทา)  │  ← แสดงเสมอ
 │ โทร: xxx-xxx-xxxx                        │  ← แสดงเมื่อมีเบอร์
 │ ที่อยู่: ตำบล, อำเภอ, จังหวัด           │  ← แสดงเมื่อมีข้อมูล
-│ รายละเอียด...              [ ลบ ]        │  ← แสดงเมื่อไม่ว่าง, maxLines=2
+│ รายละเอียด...    [ ลบ / ส่งงาน / text ] │  ← ปุ่มสลับตาม mode และ status
 └──────────────────────────────────────────┘
 ```
 
-- **เบอร์โทร** — format `xxx-xxx-xxxx` โดย Regex ใน Adapter ก่อนแสดงผล
-- **กดที่ card** — เปิด `EditOrderDialog` (BottomSheet) พร้อม pre-fill ข้อมูลเดิมทุก field
-- **ปุ่มลบ (btnDeleteItem)** — อยู่ row เดียวกับรายละเอียด (ล่างสุดของ card) เสมอ
-  - กด → `AppDialog` WARNING "ต้องการลบรายการ {ชื่อ} ใช่ไหม?"
-  - กด **ยืนยัน** → `deleteById(order.id)` → SQLite → `loadOrders()` reload list
-  - กด **ยกเลิก** → ปิด dialog ไม่ทำอะไร
-- Adapter รับ `onCardClick: (Order) -> Unit` และ `onDeleteClick: (Order) -> Unit` callback — Fragment เป็นคนจัดการทั้งหมด
-
-#### EditOrderDialog
-- `BottomSheetDialogFragment` สร้างผ่าน `EditOrderDialog.newInstance(order) { updated -> ... }`
-- pre-fill ทุก field จาก `order` ที่รับมา
-- location dropdown: ค้นหา province/district จาก `LocationMasterData` แล้วตั้ง adapter + enable ก่อน setText (เพราะ cascade ทำงานผ่าน `setOnItemClickListener` เท่านั้น)
-- validate: ชื่อและ Platform required — แสดง error ที่ `TextInputLayout`
-- กดยืนยัน → `order.copy(...)` พร้อมค่าใหม่ → callback `onConfirm`
+- **status = "ใหม่"**, DELETE mode → ปุ่ม **ลบ** (outline danger)
+- **status = "ใหม่"**, SUBMIT mode → ปุ่ม **ส่งงาน** (success)
+- **status = "ส่งงานแล้ว"** → text "ส่งงานแล้ว" สีเขียว, กด card ไม่ได้
 
 ---
 
 ### TODO ที่ยังค้างอยู่
-- [ ] implement ปุ่ม กรอง — filter รายการตามเงื่อนไข
-- [x] ~~implement ปุ่ม ลบ (btnDeleteItem) — ลบ order รายการ~~ ✓ done
-- [x] ~~implement กด card เพื่อแก้ไข order (EditOrderDialog + updateById)~~ ✓ done
-- [ ] implement ปุ่ม กรอง — filter รายการตามเงื่อนไข
+- [ ] implement ปุ่ม MENU (btnMenu) ใน Bottom Nav
 - [ ] เพิ่ม pagination หรือ load more ใน OrderResultFragment

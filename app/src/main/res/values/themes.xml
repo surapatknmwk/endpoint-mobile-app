@@ -4,4 +4,28 @@
         <item name="android:colorBackground">#FFFFFF</item>
         <item name="android:windowBackground">#FFFFFF</item>
     </style>
+
+    <!-- Animation style for top-sheet dialog -->
+    <style name="TopSheetAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_top</item>
+    </style>
+
+    <!-- Dialog style for center popup -->
+    <style name="CenterDialogStyle" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <!-- Dialog style that appears from top, full width, inherits app Material3 theme -->
+    <style name="TopSheetDialogStyle" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowAnimationStyle">@style/TopSheetAnimation</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>

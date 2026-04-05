@@ -18,11 +18,11 @@
 
         <com.google.android.material.button.MaterialButton
             style="@style/App.Button.Primary"
-            android:id="@+id/btnSearch"
+            android:id="@+id/btnMenu"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            android:text="SEARCH" />
+            android:text="MENU" />
 
         <com.google.android.material.button.MaterialButton
             style="@style/App.Button.Secondary"

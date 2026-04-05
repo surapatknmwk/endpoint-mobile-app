@@ -1,6 +1,6 @@
 package com.personal.endpointmobile.core.utils;
 
-@kotlin.Metadata(mv = {1, 9, 0}, k = 2, xi = 48, d1 = {"\u0000\u0018\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\u001a(\u0010\u0000\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001*\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0006\u001a\u00020\u00052\u0006\u0010\u0007\u001a\u00020\u0005\u001a\u0012\u0010\b\u001a\u00020\u0002*\u00020\u00032\u0006\u0010\t\u001a\u00020\u0005\u00a8\u0006\n"}, d2 = {"setupLocationDropdowns", "Lkotlin/Function0;", "", "Landroidx/fragment/app/Fragment;", "tilProvince", "Lcom/google/android/material/textfield/TextInputLayout;", "tilDistrict", "tilSubDistrict", "setupPlatformDropdown", "tilPlatform", "app_debug"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 2, xi = 48, d1 = {"\u0000\u0018\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\u001a(\u0010\u0000\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001*\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0006\u001a\u00020\u00052\u0006\u0010\u0007\u001a\u00020\u0005\u001a\u0012\u0010\b\u001a\u00020\u0002*\u00020\u00032\u0006\u0010\t\u001a\u00020\u0005\u001a\u0012\u0010\n\u001a\u00020\u0002*\u00020\u00032\u0006\u0010\u000b\u001a\u00020\u0005\u00a8\u0006\f"}, d2 = {"setupLocationDropdowns", "Lkotlin/Function0;", "", "Landroidx/fragment/app/Fragment;", "tilProvince", "Lcom/google/android/material/textfield/TextInputLayout;", "tilDistrict", "tilSubDistrict", "setupPlatformDropdown", "tilPlatform", "setupStatusDropdown", "tilStatus", "app_debug"})
 public final class LocationDropdownHelperKt {
     
     /**
@@ -30,5 +30,10 @@ public final class LocationDropdownHelperKt {
     public static final void setupPlatformDropdown(@org.jetbrains.annotations.NotNull()
     androidx.fragment.app.Fragment $this$setupPlatformDropdown, @org.jetbrains.annotations.NotNull()
     com.google.android.material.textfield.TextInputLayout tilPlatform) {
+    }
+    
+    public static final void setupStatusDropdown(@org.jetbrains.annotations.NotNull()
+    androidx.fragment.app.Fragment $this$setupStatusDropdown, @org.jetbrains.annotations.NotNull()
+    com.google.android.material.textfield.TextInputLayout tilStatus) {
     }
 }

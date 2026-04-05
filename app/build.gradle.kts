@@ -75,6 +75,9 @@ dependencies {
     // Logging
     implementation(libs.timber)
 
+    // Network
+    implementation(libs.okhttp)
+
     // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

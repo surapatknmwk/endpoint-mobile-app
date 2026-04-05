@@ -18,7 +18,7 @@
 
     <!-- ADD ORDER BUTTON -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddOrder"
+        android:id="@+id/btnNewOrder"
         style="@style/App.Button.Secondary"
         android:layout_width="0dp"
         android:layout_height="58dp"
@@ -33,6 +33,63 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar" />
 
+    <!-- DELETE + SUBMIT BUTTONS ROW -->
+    <LinearLayout
+        android:id="@+id/layoutActionRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnNewOrder">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDeleteOrder"
+            style="@style/App.Button.Outline.Danger"
+            android:layout_width="0dp"
+            android:layout_height="58dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:text="ลบ Order"
+            app:icon="@drawable/ic_btn_delete"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp"
+            app:iconTint="@color/btnDangerBg" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            style="@style/App.Button.Success"
+            android:layout_width="0dp"
+            android:layout_height="58dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="ส่งงาน"
+            app:icon="@drawable/ic_btn_send"
+            app:iconGravity="textStart"
+            app:iconPadding="8dp" />
+
+    </LinearLayout>
+
+    <!-- SYNC TO GOOGLE SHEET BUTTON -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSyncSheet"
+        style="@style/App.Button.Outline.Secondary"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Sync to Google Sheet"
+        app:icon="@drawable/ic_btn_send"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutActionRow" />
+
     <!-- ORDER LIST TITLE + FILTER BUTTON -->
     <LinearLayout
         android:id="@+id/layoutTitleRow"
@@ -45,7 +102,7 @@
         android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAddOrder">
+        app:layout_constraintTop_toBottomOf="@id/btnSyncSheet">
 
         <TextView
             android:id="@+id/tvOrderListTitle"

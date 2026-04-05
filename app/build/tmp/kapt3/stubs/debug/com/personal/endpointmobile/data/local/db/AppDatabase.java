@@ -4,7 +4,7 @@ package com.personal.endpointmobile.data.local.db;
 public final class AppDatabase extends android.database.sqlite.SQLiteOpenHelper {
     @org.jetbrains.annotations.NotNull()
     public static final java.lang.String DATABASE_NAME = "endpoint.db";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
     @org.jetbrains.annotations.NotNull()
     public static final com.personal.endpointmobile.data.local.db.AppDatabase.Companion Companion = null;
     

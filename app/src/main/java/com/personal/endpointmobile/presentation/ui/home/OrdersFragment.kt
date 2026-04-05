@@ -56,9 +56,7 @@ class OrdersFragment : Fragment() {
             findNavController().navigate(R.id.action_ordersFragment_to_orderResultFragment)
         }
 
-        binding.bottomNav.btnSearch.setOnClickListener {
-            findNavController().navigate(R.id.action_ordersFragment_to_searchFragment)
-        }
+        binding.bottomNav.btnMenu.setOnClickListener { }
 
         setupPlatformDropdown(binding.tilPlatform)
         setupLocationDropdowns(
@@ -81,7 +79,7 @@ class OrdersFragment : Fragment() {
             showSpinnerWithTimeout()
             resetFields()
             hideSpinner()
-        }
+        }   
     }
 
     private fun showSpinnerWithTimeout() {
@@ -98,7 +96,7 @@ class OrdersFragment : Fragment() {
                 binding.progressBar.gone()
                 binding.viewSpinnerOverlay.gone()
             }
-        }, 2000L)
+        }, 700L)
     }
 
     private suspend fun saveOrder() {

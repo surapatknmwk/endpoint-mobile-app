@@ -76,6 +76,16 @@
                 android:ellipsize="end"
                 android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/tvStatusDone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ส่งงานแล้ว"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:textColor="@color/btnSuccessBg"
+                android:visibility="gone" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteItem"
                 style="@style/App.Button.Outline.Danger"
@@ -91,6 +101,22 @@
                 app:iconPadding="4dp"
                 app:iconSize="14dp"
                 app:iconTint="@color/btnDangerBg" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitItem"
+                style="@style/App.Button.Success"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:minHeight="0dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="ส่งงาน"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:icon="@drawable/ic_btn_send"
+                app:iconGravity="textStart"
+                app:iconPadding="4dp"
+                app:iconSize="14dp" />
 
         </LinearLayout>
 
